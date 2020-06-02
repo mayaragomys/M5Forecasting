@@ -13,6 +13,9 @@ import pandas as pd
 import numpy as np
 import pipeline_SVR as method	
 import time
+import glob
+import juntar_bases
+from os.path import basename
 pipe = method.PipelinePrediction()
 
 def load_params():
@@ -35,44 +38,38 @@ def load_params():
 			
 	return end_ref, path
 
-
-def get_base(path):
-	df = pd.read_csv(r''+path, sep=";")   #caminho
-	return df
-
-def run(df_city, pipe, end_ref):
+def run(df_produto, pipe, end_ref):
 	"""
 		Descrição:
 			Função que executa o módulo.
 		Parâmetros:
-			base - lista que contem o id de todos os produtos que serão processados.
+			df_produto - dados do produto a ser processado.
 		Retorno:
 			Nenhum
 		"""
-	#percorre cada linha do data frame que é referente a um produto
-	for i in df_city.index:
-		df_produto = df_city.loc[i]
-		data = {}	#inicialização do dicionário de parametros personalizados  		           
-		print(df_produto)  
-		if(pipe.valid_of_class(df_produto, data)):			
-			df_treino, df_teste = pipe.preprocess(df, data)                    
-			df_teste, df_predicao = pipe.treino_predicao(df_treino, df_teste, data)
-			data = pipe.postprocess(df_teste, df_predicao, data)
+	data = {}	#inicialização do dicionário de parametros personalizados  	 
+	if(pipe.valid_of_class(df_produto, data)):			
+		df_treino, df_teste = pipe.pre_Process(df, data)                    
+		y_test, predict_test = pipe.predicao(df_treino, df_teste, data)
+		pipe.pos_Process(y_test, predict_test, data)
+		
 					
 
 if __name__== "__main__":
-
-	end_ref, path = load_params()	#inicialização dos parâmetros
 	
-	base = get_base(path)		#Pega o base no caminho informado
-	ini = time.time()	
+	#end_ref, path_out = load_params()	#inicialização dos parâmetros
+	path_calendario = "dataset/calendar.csv"	#Caminho da base de calendário
+	path_preco = "dataset/sell_prices.csv"	#Caminho da base dos preços
+	path_produtos = "dataset/sales_train_validation.csv"	#Caminho da base dos produtos com a quantidade de venda por dia
+	path_out = "dataset/base_dividida"	#Caminho para salvar a base dividida
 
-	name_city = base['state_id'].unique()
-	for cc in name_city:		
-		run(base, pipe, end_ref)
-
-	#pipe.finish(start_ref, end_ref)
-
-	fim = time.time()
-	timeStamp = fim-ini
-	print("Tempo total: ", timeStamp) 
+	# Junta as três bases e separa as informações de cada produto em um csv
+	#juntar_bases.juntar(path_calendario, path_preco, path_produtos, path_out)	
+	
+	#Processa cada produto individualmente
+	for path_base in glob.glob(path_out+"/*"):
+		df= pd.read_csv(r''+ path_base, engine='python') # lendo csv
+		#print(df)
+		run(df, pipe, "")
+					
+	print("End! ") 

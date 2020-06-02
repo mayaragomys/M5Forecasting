@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "C:\\Users\\Mayara\\anaconda3\\envs\\Dados\\python.exe"
+    "python.pythonPath": "C:\\Users\\Mayara\\anaconda3\\envs\\Dados\\python.exe",
+    "git.ignoreLimitWarning": true
 }

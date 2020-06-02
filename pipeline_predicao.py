@@ -52,7 +52,7 @@ class PipelinePrediction(object):
         pass
 
     @abstractmethod
-    def preprocess(self, df, data):
+    def pre_Process(self, df, data):
         """
         Descrição:
             Essa função deve implementar o método que realiza o preprocessamento da base.
@@ -68,7 +68,7 @@ class PipelinePrediction(object):
         pass
 
     @abstractmethod
-    def treino_predicao(self, df_treino, df_teste, data):
+    def predicao(self, df_treino, df_teste, data):
         """
         Descrição:
             Essa função deve implementar o método responsável por treinar e prever os dados com a técnica 
@@ -85,7 +85,7 @@ class PipelinePrediction(object):
 
     
     @abstractmethod
-    def postprocess(self, df_teste, df_predicao, data):
+    def pos_Process(self, df_teste, df_predicao, data):
         """
         Descrição:
             Essa função deve implementar o método responsável por realizar o pós processamento dos dados, 

@@ -2,10 +2,10 @@
 import numpy as np
 import pandas as pd
 import sys
-import pipeline_predicao
-import preprocess
-import prediction_process
-import posProcess
+import pipeline_Predicao
+import pre_Process
+import prediction_Process
+import pos_Process
 
 forcastName = 'INSTALACAO'
 
@@ -19,31 +19,24 @@ class PipelinePrediction(object):
 			return False		
 		return True
 	
-	def preprocess(self, df, data):
+	def pre_Process(self, df, data):
 		# #ajusta a base de dados para adicionar os valores nulos nos meses referentes que estão faltando
-		# df = preprocess.ajuste_base(df)			
-		# #Normaliza o data frame por produto		
-		# df = preprocess.normalize_dataFrame(df, 'timeSeries', data)		
-		# print(df)
-		# #Retorna um data frame para o treino e outro para o teste		
-		# df_treino, df_teste = preprocess.division_train_test(df)
-		df_treino = data
-		df_teste = data
-		return df_treino, df_teste
+		x, y = prediction_Process.division_x_y(df)		
+				
+		return x_treino, x_teste, y_treino, y_teste
 		
-	def treino_predicao(self, df_treino, df_teste, data):
-		# df_teste, df_predicao = prediction_process.prediction(df, data)	
-		df_teste = data 
-		df_predicao = data
-
-		return df_teste, df_predicao
+	def predicao(self, x, y, data):
+		x_treino, x_teste, y_treino, y_teste = predicao.division_train_test (x, y, por)
+		y_test, predict_test = prediction_Process.SVR_Prediction(x_treino, x_teste, y_treino, y_teste)
+		
+		#return y_test, predict_test
+		return data, data
 					
-	def postprocess(self, df_teste, df_predicao, data):
-		
-		
-		# posProcess.metrica(df, data)
+	def pos_Process(self, y_test, predict_test, data):
 			
-		return data
+		#posProcess.metricas(df, data)
+		print()
+					
 
 	def finish(self, start_ref, end_ref):
 		print()
